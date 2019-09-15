@@ -12,3 +12,4 @@ class LSTMModel(nn.Module):
     def forward(self, X, Y, lengths):
         outputs, _ = self.lstm(X)
         outputs = self.fc(outputs.view(-1, outputs.shape[-1]))
+        return outputs

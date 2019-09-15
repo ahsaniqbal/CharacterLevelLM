@@ -1,5 +1,6 @@
 import torch
 import random
+import numpy as np
 from torch.utils.data import Dataset
 from torch.nn.utils.rnn import pad_sequence
 
@@ -51,19 +52,18 @@ class CharDataset(Dataset):
         return len(self.indices)
 
     def char_to_onehot(self, character):
-        embedding = torch.zeros(self.get_vocab_size())
+        embedding = np.zeros(self.get_vocab_size())
         embedding[self.vocab_2_index[character]] = 1
-        return embedding.vew(1, -1)
+        return embedding
 
     def __getitem__(self, index):
-        start = index * seq_len
-        end = min((index + 1) * seq_len, len(self.data_file))
+        start = index * self.seq_len
+        end = min((index + 1) * self.seq_len, len(self.data_x))
         text_x = self.data_x[start:end]
 
-        text_x = [self.char_to_onehot(c) for c in text]
-        text_x = torch.cat(text, 0)
+        text_x = np.array([self.char_to_onehot(c) for c in text_x])
 
         text_y = self.data_y[start:end]
-        text_y = [self.vocab_2_index[c] for c in text_y]
-
-        return text_x, torch.tensor(text_y)
+        text_y = np.array([self.vocab_2_index[c] for c in text_y])
+        
+        return (text_x, text_y, len(text_x))
