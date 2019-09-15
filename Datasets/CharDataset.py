@@ -40,7 +40,7 @@ class CharDataset(Dataset):
         self.index_2_vocab = {k: v for k, v in enumerate(self.vocab)}
 
         self.seq_len = seq_len
-        self.indices = [i for i in range(len(self.data_x)/seq_len)]
+        self.indices = [i for i in range(len(self.data_x) // seq_len)]
         if is_train:
             random.shuffle(self.indices)
 
