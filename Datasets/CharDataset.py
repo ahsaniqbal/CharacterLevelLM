@@ -29,8 +29,10 @@ class CharDataset(Dataset):
                  is_train=True, train_size=0.7):
         with open(data_file, 'r') as f:
             self.data_x = f.read()
-            self.data_x = [:int(train_size * len(self.data_x))] \
-                if is_train else [int(train_size * len(self.data_x)):]
+            if is_train:
+                self.data_x = self.data_x[:int(train_size * len(self.data_x))]
+            else:
+                self.data_x = self.data_x[int(train_size * len(self.data_x)):]
 
         self.data_y = self.data_x[1:] + self.data_x[0]
         self.vocab = list(set(self.data_x))
