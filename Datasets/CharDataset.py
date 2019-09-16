@@ -22,7 +22,7 @@ class CustomCollate(object):
         return (pad_sequence(sorted_X), pad_sequence(sorted_Y), sorted_lengths)
 
     def __call__(self, batch):
-        self.custom_collate(self, batch)
+        self.custom_collate(batch)
 
 
 class CharDataset(Dataset):
