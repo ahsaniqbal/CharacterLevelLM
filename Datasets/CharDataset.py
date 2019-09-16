@@ -9,20 +9,24 @@ class CustomCollate(object):
     def __init__(self):
         super(CustomCollate, self).__init__()
 
+    def get_mask(self, max_length, length):
+        mask = np.zeros(max_length, dtype=np.float32)
+        mask[:length] = 1
+        return mask
+
     def custom_collate(self, batch):
         batch_X = [torch.tensor(elem[0]) for elem in batch]
         batch_Y = [torch.tensor(elem[1]) for elem in batch]
         batch_lengths = torch.tensor([elem[2] for elem in batch])
-
-        sorted_indices = torch.argsort(batch_lengths)
+        sorted_indices = torch.argsort(batch_lengths, descending=True)
         sorted_X = [batch_X[i.item()] for i in sorted_indices]
         sorted_Y = [batch_Y[i.item()] for i in sorted_indices]
         sorted_lengths = batch_lengths[sorted_indices]
-
-        return (pad_sequence(sorted_X), pad_sequence(sorted_Y), sorted_lengths)
+        mask = list(map(lambda x: torch.ones(x), sorted_lengths))
+        return (pad_sequence(sorted_X), pad_sequence(sorted_Y), pad_sequence(mask))
 
     def __call__(self, batch):
-        self.custom_collate(batch)
+        return self.custom_collate(batch)
 
 
 class CharDataset(Dataset):
@@ -52,7 +56,7 @@ class CharDataset(Dataset):
         return len(self.indices)
 
     def char_to_onehot(self, character):
-        embedding = np.zeros(self.get_vocab_size())
+        embedding = np.zeros(self.get_vocab_size(), dtype=np.float32)
         embedding[self.vocab_2_index[character]] = 1
         return embedding
 

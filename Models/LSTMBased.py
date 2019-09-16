@@ -9,7 +9,7 @@ class LSTMModel(nn.Module):
         self.lstm = nn.LSTM(input_size=input_size, hidden_size=hidden_size)
         self.fc = nn.Linear(hidden_size, output_size)
 
-    def forward(self, X, Y, lengths):
+    def forward(self, X):
         outputs, _ = self.lstm(X)
         outputs = self.fc(outputs.view(-1, outputs.shape[-1]))
         return outputs
