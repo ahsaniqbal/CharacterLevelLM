@@ -1,7 +1,7 @@
 import torch
 from torch import nn
 from torch.optim import Adam
-from Datasets.CharDataset import CustomCollate
+from .Datasets.CharDataset import CustomCollate
 from torch.utils.data import DataLoader
 import numpy as np
 
