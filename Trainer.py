@@ -2,7 +2,7 @@ import torch
 from torch import nn
 from torch.optim import Adam
 from torch.utils.data import DataLoader
-import numpy 
+import numpy as np
 
 class Trainer(object):
     def __init__(self, model, dataset_train,
