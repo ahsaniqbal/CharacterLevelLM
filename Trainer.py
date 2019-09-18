@@ -1,6 +1,7 @@
 import torch
 from torch import nn
 from torch.optim import Adam
+from Datasets.CharDataset import CustomCollate
 from torch.utils.data import DataLoader
 import numpy as np
 
@@ -14,8 +15,9 @@ class Trainer(object):
         self.optimizer = Adam(model.parameters(), lr=learning_rate)
 
         self.loader_train = DataLoader(dataset_train, batch_size=batch_size,
-                                       shuffle=True)
-        self.loader_test = DataLoader(dataset_test, batch_size=batch_size, shuffle=True)
+                                       shuffle=True, collate_fn=CustomCollate())
+        self.loader_test = DataLoader(dataset_test, batch_size=batch_size,
+                                      shuffle=False, collate_fn=CustomCollate())
         self.model_path = model_path
         self.epochs = epochs
 
@@ -30,7 +32,7 @@ class Trainer(object):
         for idx, data in enumerate(dataloader):
             X, Y, mask = data
             X, Y, mask = X.cuda(), Y.cuda(), mask.cuda()
-
+        
             Y = Y.view(Y.shape[0] * Y.shape[1])
             mask = mask.view(mask.shape[0] * mask.shape[1])
 
