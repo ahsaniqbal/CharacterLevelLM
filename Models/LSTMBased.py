@@ -19,6 +19,7 @@ class LSTMModel(nn.Module):
     def sample(self, X):
         outputs, _ = self.lstm(X)
         outputs = self.fc(outputs.view(-1, outputs.shape[-1]))
-        m = Categorical(probs=self.softmax(outputs[-1].view(1, -1)))
-        return m.sample()
+        #m = Categorical(probs=self.softmax(outputs[-1].view(1, -1)))
+        #return m.sample()
+        return torch.argmax(outputs)[-1]
 
